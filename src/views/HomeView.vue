@@ -298,7 +298,7 @@ onBeforeRouteLeave(() => {
     <div>
       <h2 class="text-base space-y-2">How To use:</h2>
       <p class="mb-2">
-        just pass in a zod schema object to useValidator with the optional parameters
+        just pass in a zod schema object to useValidator with the optional parameters with v-model binding to form.[field on schema]
       </p>
       <code>
         <pre class="">
