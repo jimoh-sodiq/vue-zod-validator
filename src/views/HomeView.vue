@@ -10,12 +10,11 @@ import {
   onMounted,
   type ComputedRef,
   type Ref,
-type UnwrapRef
+  type UnwrapRef
 } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { z } from 'zod'
 import type { AnyZodObject, ZodFormattedError } from 'zod'
-
 
 // setTimeout(() => {
 //   form.name = 'jimohsodiq'
@@ -132,7 +131,9 @@ function useValidator<T extends AnyZodObject>(
     const result = await unrefSchema.safeParseAsync(form)
     // console.log('valid')
     if (!result.success) {
-      errorToDisplay.value = errors.value as UnwrapRef<ZodFormattedError<z.infer<typeof unrefSchema>>>
+      errorToDisplay.value = errors.value as UnwrapRef<
+        ZodFormattedError<z.infer<typeof unrefSchema>>
+      >
       return {
         success: false,
         error: result.error.format() as ZodFormattedError<z.infer<typeof unrefSchema>>
@@ -154,17 +155,15 @@ function useValidator<T extends AnyZodObject>(
     return result.value.success
   })
 
-  const errors: ComputedRef<ZodFormattedError<z.infer<typeof unrefSchema>>> = computed(
-    () => {
-      // const result = unrefSchema.safeParse(form)
+  const errors: ComputedRef<ZodFormattedError<z.infer<typeof unrefSchema>>> = computed(() => {
+    // const result = unrefSchema.safeParse(form)
 
-      if (!result.value.success) {
-        return result.value.error.format() as ZodFormattedError<z.infer<typeof unrefSchema>>
-      } else {
-        return {} as ZodFormattedError<z.infer<typeof unrefSchema>>
-      }
+    if (!result.value.success) {
+      return result.value.error.format() as ZodFormattedError<z.infer<typeof unrefSchema>>
+    } else {
+      return {} as ZodFormattedError<z.infer<typeof unrefSchema>>
     }
-  )
+  })
 
   async function handleBlurEvent() {
     if (defaultOptions.validationType == 'blur') {
@@ -227,10 +226,10 @@ const schema = z.object({
   email: z.string().email('please provide a valid email address')
 })
 const formData = z.object({
-  name: z.string().min(7).default('Adekunle'),
+  name: z.string().min(7).default('Ajibola'),
   contactInfo: z.object({
     email: z.string().email(),
-    phone: z.string().optional().default('fsadfas')
+    phone: z.string().optional().default('0123456789')
   })
 })
 
@@ -295,5 +294,24 @@ onBeforeRouteLeave(() => {
     </button>
     <!-- <FormViewer :error="errors" :form="form" :valid="valid" :tainted="false" /> -->
     <router-link class="block underline w-fit" to="flfll">Another page </router-link>
+
+    <div>
+      <h2 class="text-base space-y-2">How To use:</h2>
+      <p class="mb-2">
+        just pass in a zod schema object to useValidator with the optional parameters
+      </p>
+      <code>
+        <pre class="">
+const formData = z.object({ name: z.string().min(7).default('Ajibola'), contactInfo:
+      z.object({ email: z.string().email(), phone: z.string().optional().default('0123456789') }) })
+      </pre
+        >
+      </code>
+      <code>
+        <pre class="">
+const { form, tainted, validate, errors, binder, valid } = useValidator(formData)</pre
+        >
+      </code>
+    </div>
   </div>
 </template>
