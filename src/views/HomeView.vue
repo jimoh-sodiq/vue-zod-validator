@@ -9,9 +9,10 @@ import {
   computed,
   onMounted,
   type ComputedRef,
-  type Ref
+  type Ref,
+type UnwrapRef
 } from 'vue'
-import { onBeforeRouteLeave, useRouter, useRoute } from 'vue-router'
+import { onBeforeRouteLeave } from 'vue-router'
 import { z } from 'zod'
 import type { AnyZodObject, ZodFormattedError } from 'zod'
 
@@ -131,14 +132,13 @@ function useValidator<T extends AnyZodObject>(
     const result = await unrefSchema.safeParseAsync(form)
     // console.log('valid')
     if (!result.success) {
-      errorToDisplay.value = errors.value
-      console.log(errorToDisplay.value)
+      errorToDisplay.value = errors.value as UnwrapRef<ZodFormattedError<z.infer<typeof unrefSchema>>>
       return {
         success: false,
         error: result.error.format() as ZodFormattedError<z.infer<typeof unrefSchema>>
       }
     } else {
-      errorToDisplay.value = {} as ZodFormattedError<z.infer<typeof unrefSchema>>
+      errorToDisplay.value = {} as UnwrapRef<ZodFormattedError<z.infer<typeof unrefSchema>>>
       return result
     }
   }
@@ -154,7 +154,7 @@ function useValidator<T extends AnyZodObject>(
     return result.value.success
   })
 
-  const errors: ComputedRef<ZodFormattedError<z.infer<typeof unrefSchema>, string>> = computed(
+  const errors: ComputedRef<ZodFormattedError<z.infer<typeof unrefSchema>>> = computed(
     () => {
       // const result = unrefSchema.safeParse(form)
 
